@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -31,16 +32,17 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-
-
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import NewOrder from './NewOrder';
 import Dashboard from './Dashboard';
+import SubmitSuccess from './SubmitSuccess';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link as LinkRoute,
   withRouter 
 } from "react-router-dom";
@@ -154,6 +156,43 @@ function App(props) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const handleTest = async (status) => {
+    
+    
+      try {
+
+          // selectDepositStatus(status)
+
+          const response = await fetch('http://localhost:3000/ordercreate', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+  
+                  depositStatus: status,
+                  depositId: '6015adfa4940c17d50d989da'
+              }),
+          })
+  
+          if (response.status===500) {
+              throw new Error('Upload Failure')
+          }
+
+          const thing = await response.json();
+          console.log(thing);
+
+      } catch(err){
+          alert(err.message)
+      }
+
+
+
+
+
+
+  }
+
 
   return (
     <div className={classes.root}>
@@ -250,7 +289,7 @@ function App(props) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
 
-      <div>
+      <Container disableGutters>
 
         <Switch>
           <Route path="/dashboard">
@@ -258,6 +297,12 @@ function App(props) {
           </Route>
           <Route path="/neworder">
             <h1>New Order</h1>
+
+            {/* <button onClick={() => handleTest('PENDING')} >TEST BUTTON</button> */}
+
+            <NewOrder />
+
+
           </Route>
           <Route path="/vieworders">
             <h1>View Orders</h1>
@@ -265,8 +310,11 @@ function App(props) {
           <Route path="/viewinvoices">
             <h1>View Invoices</h1>
           </Route>
+          <Route path="/submitsuccess">
+            <SubmitSuccess />
+          </Route>
         </Switch>
-      </div>
+      </Container>
 
         <Box pt={4}>
           <Copyright />
