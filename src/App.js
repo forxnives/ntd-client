@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -36,6 +36,8 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import NewOrder from './NewOrder';
+import ViewOrders from './ViewOrders';
+import ViewInvoices from './ViewInvoices';
 import Dashboard from './Dashboard';
 import SubmitSuccess from './SubmitSuccess';
 import {
@@ -144,8 +146,83 @@ const useStyles = makeStyles((theme) => ({
 
 
 function App(props) {
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+
+  const [ ordersArray, setOrdersArray ] = useState([]);
+  const [ invoicesArray, setInvoicesArray ] = useState([]);
+  const [ error, setError ] = useState(undefined);
+  const [ update, forceUpdate ] = useState(false)
+  
+
+
+
+  useEffect(()=>{
+        
+    const retrieveOrders = async (e) => {
+
+        try {
+            const response = await fetch('http://localhost:3000/ordersretrieve', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerId: '6026ccf275a0066b1cf32b86'
+                }),
+            })
+            if (response.status===500) {
+                throw new Error('Failure to retrieve')
+            }
+
+            const data = await response.json()
+
+            console.log(data)
+            setOrdersArray(data.data)
+          
+        } catch(err) {
+            setError(err.message);
+            console.log(err.message)
+        }
+    }
+
+
+    const retrieveInvoices = async (e) => {
+
+      try {
+
+            const response = await fetch('http://localhost:3000/invoicesretrieve', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerId: '6026ccf275a0066b1cf32b86'
+                }),
+            })
+            if (response.status===500) {
+                throw new Error('Failure to retrieve')
+            }
+
+            const data = await response.json()
+
+            console.log(data)
+            setInvoicesArray(data.data)
+
+
+      }catch (err) {
+        setError(err.message)
+        console.log(err.message)
+      }
+    }
+
+
+    retrieveOrders()
+    retrieveInvoices()
+
+},[update])
+
 
 
   const handleDrawerOpen = () => {
@@ -156,42 +233,7 @@ function App(props) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const handleTest = async (status) => {
-    
-    
-      try {
 
-          // selectDepositStatus(status)
-
-          const response = await fetch('http://localhost:3000/ordercreate', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-  
-                  depositStatus: status,
-                  depositId: '6015adfa4940c17d50d989da'
-              }),
-          })
-  
-          if (response.status===500) {
-              throw new Error('Upload Failure')
-          }
-
-          const thing = await response.json();
-          console.log(thing);
-
-      } catch(err){
-          alert(err.message)
-      }
-
-
-
-
-
-
-  }
 
 
   return (
@@ -300,15 +342,19 @@ function App(props) {
 
             {/* <button onClick={() => handleTest('PENDING')} >TEST BUTTON</button> */}
 
-            <NewOrder />
+            <NewOrder invoicesArray={invoicesArray} updateValue={update} update={forceUpdate} />
 
 
           </Route>
           <Route path="/vieworders">
             <h1>View Orders</h1>
+
+            <ViewOrders updateValue={update} update={forceUpdate} ordersArray={ordersArray}  />
           </Route>
           <Route path="/viewinvoices">
             <h1>View Invoices</h1>
+
+            <ViewInvoices invoicesArray={invoicesArray} />
           </Route>
           <Route path="/submitsuccess">
             <SubmitSuccess />

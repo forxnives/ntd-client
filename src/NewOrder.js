@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const NewOrder = ({history}) => {
+const NewOrder = ({history, update, updateValue, invoicesArray}) => {
 
 
     const [rowsArray, setRowsArray] = useState([1, 2])
@@ -48,6 +48,9 @@ const NewOrder = ({history}) => {
     }, [rowsArray]) 
 
 
+    const filteredArray = invoicesArray.filter(invoice => (
+        invoice.status === 'UNPAID'
+    ))
 
 
 
@@ -55,10 +58,19 @@ const NewOrder = ({history}) => {
 
 
 
-    const handleInvoiceCreateSubmit = async (e) => {
+    const handleOrderCreateSubmit = async (e) => {
 
         try {
             e.preventDefault();
+
+            if (filteredArray.length) {
+                alert('You have an unpaid invoice')
+                throw new Error('Unpaid Invoice')
+            }
+
+
+
+
 
             const nodeList = document.querySelectorAll('.orderrow')
 
@@ -78,8 +90,9 @@ const NewOrder = ({history}) => {
                 },
                 body: JSON.stringify({
     
-                    customer: 'Test Test',
-                    customerCode: 'TES0001',
+                    customerId: '6026ccf275a0066b1cf32b86',
+                    customer: 'cashcustomer',
+                    customerCode: 'CLI0001',
                     invoiceStatus: 'REQUESTED',
                     date: new Date(),
                 
@@ -94,6 +107,7 @@ const NewOrder = ({history}) => {
             }
   
             if (response.status===200) {
+                update(!updateValue)
                 history.push('/submitsuccess')
             }
             // console.log(thing);
@@ -175,7 +189,7 @@ const NewOrder = ({history}) => {
 
         
 
-        <form onSubmit={(e)=> handleInvoiceCreateSubmit(e)}> 
+        <form onSubmit={(e)=> handleOrderCreateSubmit(e)}> 
             
 
             {/* <Input type='submit' width={1/2} /> */}
