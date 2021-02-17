@@ -80,7 +80,6 @@ const NewOrder = ({history, update, updateValue, invoicesArray}) => {
                  return {quantity: inputNodes[0].value, packing: inputNodes[1].value, item: inputNodes[2].value}
             })
 
-            console.log(ordersArray)
 
 
             const response = await fetch('http://localhost:3000/ordercreate', {

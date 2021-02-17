@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,6 +19,28 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { withRouter } from 'react-router-dom';
 import { Button } from '@material-ui/core';
+
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
+
+
 
 
 const useRowStyles = makeStyles({
@@ -92,22 +114,22 @@ const useRowStyles = makeStyles({
   
     return (
       <React.Fragment>
-        <TableRow className={classes.root}>
-          <TableCell>
+        <StyledTableRow className={classes.root}>
+          <StyledTableCell>
             <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
-          </TableCell>
-          <TableCell component="th" scope="row">
+          </StyledTableCell>
+          <StyledTableCell component="th" scope="row">
             {row.number}
-          </TableCell>
-          <TableCell>{row.date}</TableCell>
-          <TableCell>{row.items}</TableCell>
-          <TableCell>{row.status}</TableCell>
-          <TableCell>{row.protein}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          </StyledTableCell>
+          <StyledTableCell>{row.date}</StyledTableCell>
+          <StyledTableCell>{row.items}</StyledTableCell>
+          <StyledTableCell>{row.status}</StyledTableCell>
+
+        </StyledTableRow>
+        <StyledTableRow>
+          <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={1}>
 
@@ -115,23 +137,23 @@ const useRowStyles = makeStyles({
 
                 <Table size="small" aria-label="purchases">
                   <TableHead>
-                    <TableRow>
-                      <TableCell align="center" >Quantity</TableCell>
-                      <TableCell align="center" >Packing</TableCell>
-                      <TableCell align="center" >Item</TableCell>
+                    <StyledTableRow>
+                      <StyledTableCell align="center" >Quantity</StyledTableCell>
+                      <StyledTableCell align="center" >Packing</StyledTableCell>
+                      <StyledTableCell align="center" >Item</StyledTableCell>
 
-                    </TableRow>
+                    </StyledTableRow>
                   </TableHead>
                   <TableBody>
                     {row.requests.map((requestRow, index) => (
-                      <TableRow key={index}>
-                        <TableCell align="center" component="th" scope="row">
+                      <StyledTableRow key={index}>
+                        <StyledTableCell align="center" component="th" scope="row">
                           {requestRow.quantity}
-                        </TableCell>
-                        <TableCell align="center" >{requestRow.packing}</TableCell>
-                        <TableCell align="center" >{requestRow.item}</TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell align="center" >{requestRow.packing}</StyledTableCell>
+                        <StyledTableCell align="center" >{requestRow.item}</StyledTableCell>
 
-                      </TableRow>
+                      </StyledTableRow>
                     ))}
                   </TableBody>
                 </Table>
@@ -161,8 +183,8 @@ const useRowStyles = makeStyles({
               
               </Box>
             </Collapse>
-          </TableCell>
-        </TableRow>
+          </StyledTableCell>
+        </StyledTableRow>
       </React.Fragment>
     );
   }
@@ -257,23 +279,36 @@ const ViewOrders = ({history, ordersArray, update, updateValue}) => {
     return (
 
         <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Order Number</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Items</TableCell>
-              <TableCell>Status</TableCell>
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <Row update={update} updateValue={updateValue} history={history} key={row.name} row={row} />
-            ))}
-          </TableBody>
-        </Table>
+
+        {ordersArray.length ? (
+
+        <Table aria-label="collapsible table">
+        <TableHead>
+          <StyledTableRow>
+            <StyledTableCell />
+            <StyledTableCell>Order Number</StyledTableCell>
+            <StyledTableCell>Date</StyledTableCell>
+            <StyledTableCell>Items</StyledTableCell>
+            <StyledTableCell>Status</StyledTableCell>
+
+          </StyledTableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <Row update={update} updateValue={updateValue} history={history} key={row.name} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+
+        ) : (
+
+          <h4> No orders </h4>
+
+        ) }
+
+
+
       </TableContainer>
 
     )

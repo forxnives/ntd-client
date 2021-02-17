@@ -25,30 +25,18 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
-      {/* <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
-          <YAxis stroke={theme.palette.text.secondary}>
-            <Label
-              angle={270}
-              position="left"
-              style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
-            >
-              Sales ($)
-            </Label>
-          </YAxis>
-          <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
-        </LineChart>
-      </ResponsiveContainer> */}
+      <div style={{backgroundImage: 'url(http://www.ntdingredientes.com.jm/wp-content/uploads/2019/10/quienes_somos2.jpg)', height: 100 + '%', backgroundSize: 'cover'}}>
+
+        <div style={{backgroundColor: 'rgba(255,255,255,.5)' }}>
+        
+        <Title>Welcome Customer</Title>
+
+        </div>
+
+      </div>
+
+
+
     </React.Fragment>
   );
 }

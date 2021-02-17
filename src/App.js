@@ -40,6 +40,7 @@ import ViewOrders from './ViewOrders';
 import ViewInvoices from './ViewInvoices';
 import Dashboard from './Dashboard';
 import SubmitSuccess from './SubmitSuccess';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -53,8 +54,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://www.ntdingredientes.com.jm/">
+        NTD Ingredientes
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -152,6 +153,10 @@ function App(props) {
 
   const [ ordersArray, setOrdersArray ] = useState([]);
   const [ invoicesArray, setInvoicesArray ] = useState([]);
+
+  const [ orderNotification, setOrderNotification ] = useState(0)
+  const [ invoiceNotification, setInvoiceNotification ] = useState(0)
+
   const [ error, setError ] = useState(undefined);
   const [ update, forceUpdate ] = useState(false)
   
@@ -178,7 +183,7 @@ function App(props) {
 
             const data = await response.json()
 
-            console.log(data)
+
             setOrdersArray(data.data)
           
         } catch(err) {
@@ -207,7 +212,7 @@ function App(props) {
 
             const data = await response.json()
 
-            console.log(data)
+            
             setInvoicesArray(data.data)
 
 
@@ -222,6 +227,19 @@ function App(props) {
     retrieveInvoices()
 
 },[update])
+
+
+useEffect(() => {
+
+  const repliedOrders = ordersArray.filter(order => (order.invoiceStatus==='REPLIED') )
+
+  const outstandingInvoices = invoicesArray.filter( invoice => (invoice.status==='UNPAID') )
+
+  setOrderNotification(repliedOrders.length)
+  setInvoiceNotification(outstandingInvoices.length)
+
+
+},[ordersArray, invoicesArray])
 
 
 
@@ -254,10 +272,10 @@ function App(props) {
 
           </Typography>
           <IconButton color="inherit">
-            {/* <Badge badgeContent={4} color="secondary"> */}
+            
               {/* <NotificationsIcon /> */}
               <img src='https://www.ntdingredientes.com.jm/wp-content/uploads/2019/10/NTD-Ingredientes_Logoblanco150px.png' style={{width: 100 + 'px'}}></img>
-            {/* </Badge> */}
+
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -279,45 +297,45 @@ function App(props) {
         <List>
 
         <div>
-          <LinkRoute style={{ textDecoration: 'none', color: 'black' }} to="/dashboard">
+          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/dashboard">
             <ListItem button>
               <ListItemIcon>
-                <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={0} color="secondary">
                   <DashboardIcon />
-                </Badge>
+            </Badge>
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
           </LinkRoute>
           
-          <LinkRoute style={{ textDecoration: 'none', color: 'black' }} to="/neworder">
+          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/neworder">
             <ListItem button>
               <ListItemIcon>
-                <Badge badgeContent={0} color="secondary">
+
                   <ShoppingCartIcon />
-                </Badge>
+
               </ListItemIcon>
               <ListItemText primary="New Order" />
             </ListItem>
           </LinkRoute>
           
-          <LinkRoute style={{ textDecoration: 'none', color: 'black' }} to="/vieworders">
+          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/vieworders">
             <ListItem button>
               <ListItemIcon>
-                <Badge badgeContent={0} color="secondary">
+              <Badge badgeContent={orderNotification} color="secondary">
                   <BarChartIcon />
-                </Badge>
+                  </Badge>
               </ListItemIcon>
               <ListItemText primary="View Orders" />
             </ListItem>
           </LinkRoute>
 
-          <LinkRoute style={{ textDecoration: 'none', color: 'black' }} to="/viewinvoices">
+          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/viewinvoices">
             <ListItem button>
               <ListItemIcon>
-                <Badge badgeContent={0} color="secondary">
+                <Badge badgeContent={invoiceNotification} color="secondary">
                   <LayersIcon />
-                </Badge>
+                  </Badge>
               </ListItemIcon>
               <ListItemText primary="View Invoices" />
             </ListItem>
@@ -335,19 +353,25 @@ function App(props) {
 
         <Switch>
           <Route path="/dashboard">
-            <Dashboard />
+
+
+            <Dashboard ordersArray={ordersArray} invoicesArray={invoicesArray}  />
+
+
           </Route>
           <Route path="/neworder">
             <h1>New Order</h1>
 
             {/* <button onClick={() => handleTest('PENDING')} >TEST BUTTON</button> */}
 
-            <NewOrder invoicesArray={invoicesArray} updateValue={update} update={forceUpdate} />
+            <NewOrder invoicesArray={invoicesArray} updateValue={update} update={forceUpdate} />  
 
 
           </Route>
           <Route path="/vieworders">
             <h1>View Orders</h1>
+
+
 
             <ViewOrders updateValue={update} update={forceUpdate} ordersArray={ordersArray}  />
           </Route>

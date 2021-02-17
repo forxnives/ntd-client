@@ -3,12 +3,27 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 
+import { priceFormat } from './helpers';
+
 import Chart from './Chart';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
 import Deposits from './Deposits';
 import Orders from './Orders';
+
+import DashBoardOrders from './DashBoardOrders';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link as LinkRoute,
+  withRouter 
+} from "react-router-dom";
+
+import Typography from '@material-ui/core/Typography';
+import Title from './Title';
 
 
 
@@ -32,11 +47,26 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function Dshboard(props) {
+export default function Dashboard({ordersArray, invoicesArray}) {
 
     const classes = useStyles();
 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+
+    const outstandingBalance = invoicesArray.reduce((accumulator, invoice) => {
+      if (invoice.status === 'UNPAID'){
+        return accumulator + invoice.price
+      }else{
+        return accumulator
+      }
+    },0)
+
+    
+
+
+
+
 
   return (
 
@@ -51,13 +81,31 @@ export default function Dshboard(props) {
       {/* Recent Deposits */}
       <Grid item xs={12} md={4} lg={3}>
         <Paper className={fixedHeightPaper}>
-          <Deposits />
+          <Deposits outstandingBalance={priceFormat(outstandingBalance)}  />
         </Paper>
       </Grid>
       {/* Recent Orders */}
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-          <Orders />
+
+
+        <Title>Orders</Title>
+      <Typography component="p" variant="h4">
+
+      </Typography>
+      <Typography color="textSecondary" className={classes.depositContext}>
+
+      </Typography>
+
+          {/* <ViewOrders  ordersArray={ordersArray} /> */}
+
+          <DashBoardOrders ordersArray={ordersArray} />
+
+          <div>
+        <LinkRoute color="primary" to="/neworder" >
+          Make new order
+        </LinkRoute>
+      </div>
         </Paper>
       </Grid>
     </Grid>

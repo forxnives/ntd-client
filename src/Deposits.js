@@ -4,6 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link as LinkRoute,
+  withRouter 
+} from "react-router-dom";
+
+
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -14,21 +24,23 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Deposits() {
+export default function Deposits({outstandingBalance}) {
   const classes = useStyles();
+
+  
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Outstanding Balance</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        {outstandingBalance}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
-        </Link>
+        <LinkRoute color="primary" to="/viewinvoices" >
+          View Invoices
+        </LinkRoute>
       </div>
     </React.Fragment>
   );
