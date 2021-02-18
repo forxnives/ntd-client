@@ -14,6 +14,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 // import Select from '@material-ui/core/Select';
 import { withRouter } from 'react-router-dom';
 
+
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const NewOrder = ({history, update, updateValue, invoicesArray}) => {
+const NewOrder = ({history, update, updateValue, invoicesArray, userId}) => {
 
 
     const [rowsArray, setRowsArray] = useState([1, 2])
@@ -89,7 +90,7 @@ const NewOrder = ({history, update, updateValue, invoicesArray}) => {
                 },
                 body: JSON.stringify({
     
-                    customerId: '6026ccf275a0066b1cf32b86',
+                    customerId: userId,
                     customer: 'cashcustomer',
                     customerCode: 'CLI0001',
                     invoiceStatus: 'REQUESTED',

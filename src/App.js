@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,6 +39,7 @@ import NewOrder from './NewOrder';
 import ViewOrders from './ViewOrders';
 import ViewInvoices from './ViewInvoices';
 import Dashboard from './Dashboard';
+import Login from "./Login";
 import SubmitSuccess from './SubmitSuccess';
 
 import {
@@ -159,6 +160,31 @@ function App(props) {
 
   const [ error, setError ] = useState(undefined);
   const [ update, forceUpdate ] = useState(false)
+
+  const [user, setUser] = useState(undefined);
+
+
+  const getUser = useCallback(async function() {
+    try {
+      const response = await fetch("/customer/me");
+      const json = await response.json();
+
+      // Handle non 200 responses:
+      if (!response.ok) {
+        throw new Error(json.message);
+      }
+      setUser(json.data);
+    } catch(e) {
+      setUser(undefined);
+      console.log(e);
+    }
+  }, [])
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+
+
+
   
 
 
@@ -174,7 +200,7 @@ function App(props) {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    customerId: '6026ccf275a0066b1cf32b86'
+                    customerId: user.id
                 }),
             })
             if (response.status===500) {
@@ -184,11 +210,12 @@ function App(props) {
             const data = await response.json()
 
 
+
             setOrdersArray(data.data)
           
         } catch(err) {
             setError(err.message);
-            console.log(err.message)
+            console.log(err.message);
         }
     }
 
@@ -203,7 +230,7 @@ function App(props) {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    customerId: '6026ccf275a0066b1cf32b86'
+                    customerId: user.id
                 }),
             })
             if (response.status===500) {
@@ -256,6 +283,7 @@ useEffect(() => {
 
   return (
     <div className={classes.root}>
+      
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -281,77 +309,102 @@ useEffect(() => {
       </AppBar>
 
       <Router>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
 
-        <div>
-          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/dashboard">
-            <ListItem button>
-              <ListItemIcon>
-              <Badge badgeContent={0} color="secondary">
-                  <DashboardIcon />
-            </Badge>
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
-          </LinkRoute>
-          
-          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/neworder">
-            <ListItem button>
-              <ListItemIcon>
+        {
+          !user && (
+            <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+            }}
+            open={open}
+          >
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            <List>
+    
+            <div>
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/dashboard">
+                <ListItem button>
+                  <ListItemIcon>
+                  <Badge badgeContent={0} color="secondary">
+                      <DashboardIcon />
+                </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItem>
+              </LinkRoute>
+              
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/neworder">
+                <ListItem button>
+                  <ListItemIcon>
+    
+                      <ShoppingCartIcon />
+    
+                  </ListItemIcon>
+                  <ListItemText primary="New Order" />
+                </ListItem>
+              </LinkRoute>
+              
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/vieworders">
+                <ListItem button>
+                  <ListItemIcon>
+                  <Badge badgeContent={orderNotification} color="secondary">
+                      <BarChartIcon />
+                      </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary="View Orders" />
+                </ListItem>
+              </LinkRoute>
+    
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/viewinvoices">
+                <ListItem button>
+                  <ListItemIcon>
+                    <Badge badgeContent={invoiceNotification} color="secondary">
+                      <LayersIcon />
+                      </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary="View Invoices" />
+                </ListItem>
+              </LinkRoute>
+            </div>
+    
+            </List>
+            <Divider />
+            
+          </Drawer>
+          )
+        }
 
-                  <ShoppingCartIcon />
-
-              </ListItemIcon>
-              <ListItemText primary="New Order" />
-            </ListItem>
-          </LinkRoute>
-          
-          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/vieworders">
-            <ListItem button>
-              <ListItemIcon>
-              <Badge badgeContent={orderNotification} color="secondary">
-                  <BarChartIcon />
-                  </Badge>
-              </ListItemIcon>
-              <ListItemText primary="View Orders" />
-            </ListItem>
-          </LinkRoute>
-
-          <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/viewinvoices">
-            <ListItem button>
-              <ListItemIcon>
-                <Badge badgeContent={invoiceNotification} color="secondary">
-                  <LayersIcon />
-                  </Badge>
-              </ListItemIcon>
-              <ListItemText primary="View Invoices" />
-            </ListItem>
-          </LinkRoute>
-        </div>
-
-        </List>
-        <Divider />
-        
-      </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
 
       <Container disableGutters>
 
         <Switch>
+
+
+        <Route
+            exact
+            path="/login"
+            render={props => {
+              // if (user) {
+              //   return <Redirect to="/dashboard" />;
+              // }
+
+              return <Login getUser={getUser} {...props} />;
+              // return <Login setUser={setUser} {...props} />;
+            }}
+          />
+
+
+
+
+
           <Route path="/dashboard">
 
 
@@ -364,7 +417,7 @@ useEffect(() => {
 
             {/* <button onClick={() => handleTest('PENDING')} >TEST BUTTON</button> */}
 
-            <NewOrder invoicesArray={invoicesArray} updateValue={update} update={forceUpdate} />  
+            <NewOrder userId={user ? (user.id) : (null)} invoicesArray={invoicesArray} updateValue={update} update={forceUpdate} />  
 
 
           </Route>
