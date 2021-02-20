@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 
 import { priceFormat } from './helpers';
 
-import Chart from './Chart';
+import DashCell from './DashCell';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function Dashboard({ordersArray, invoicesArray}) {
+export default function Dashboard({ordersArray, invoicesArray, userName}) {
 
     const classes = useStyles();
 
@@ -73,36 +73,38 @@ export default function Dashboard({ordersArray, invoicesArray}) {
     <Container maxWidth="lg" className={classes.container}>
     <Grid container spacing={3}>
       {/* Chart */}
-      <Grid item xs={12} md={8} lg={9}>
+      <Grid item xs={12} md={12} lg={12}>
         <Paper className={fixedHeightPaper}>
-          <Chart />
+          <DashCell name={userName} />
         </Paper>
       </Grid>
       {/* Recent Deposits */}
-      <Grid item xs={12} md={4} lg={3}>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper className={fixedHeightPaper}>
           <Deposits outstandingBalance={priceFormat(outstandingBalance)}  />
         </Paper>
       </Grid>
       {/* Recent Orders */}
-      <Grid item xs={12}>
-        <Paper className={classes.paper}>
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper style={{height: 100 + '%'}} className={classes.paper}>
 
 
         <Title>Orders</Title>
       <Typography component="p" variant="h4">
 
       </Typography>
-      <Typography color="textSecondary" className={classes.depositContext}>
 
-      </Typography>
 
           {/* <ViewOrders  ordersArray={ordersArray} /> */}
 
           <DashBoardOrders ordersArray={ordersArray} />
 
+            <Typography color="textSecondary" style={{height: 100 + '%'}}>
+
+            </Typography>
+
           <div>
-        <LinkRoute color="primary" to="/neworder" >
+        <LinkRoute color="primary" to="/app/neworder" >
           Make new order
         </LinkRoute>
       </div>

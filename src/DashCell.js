@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
-// import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 
 // Generate Sales Data
@@ -20,7 +19,7 @@ const data = [
   createData('24:00', undefined),
 ];
 
-export default function Chart() {
+export default function DashCell({ name }) {
   const theme = useTheme();
 
   return (
@@ -29,7 +28,7 @@ export default function Chart() {
 
         <div style={{backgroundColor: 'rgba(255,255,255,.5)' }}>
         
-        <Title>Welcome Customer</Title>
+        <Title>Welcome {`${name}`}</Title>
 
         </div>
 

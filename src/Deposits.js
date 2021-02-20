@@ -38,7 +38,7 @@ export default function Deposits({outstandingBalance}) {
 
       </Typography>
       <div>
-        <LinkRoute color="primary" to="/viewinvoices" >
+        <LinkRoute color="primary" to="/app/viewinvoices" >
           View Invoices
         </LinkRoute>
       </div>

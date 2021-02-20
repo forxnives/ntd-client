@@ -68,7 +68,7 @@ export default function SignInSide(props) {
         // body: JSON.stringify({ email: email, password: password }),
       })
       const data = await response.json();
-      console.log(data)
+
       if (!response.ok) {
         throw new Error(data.message);
       }
@@ -81,32 +81,6 @@ export default function SignInSide(props) {
   }
 
 
-
-  // const handleSubmit = async (e) => {
-
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch('http://localhost:3000/customer/login', {
-
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //       // body: JSON.stringify({ email: email, password: password }),
-  //     })
-  //     const data = await response.json();
-  //     if (!response.ok) {
-  //       throw new Error(data.message);
-  //     }
-  //     // call /users/me and get info about the user with the NEW token:
-  //     console.log(data)
-  //     props.setUser(data);
-  //   } catch(err) {
-  //     setError(err.message);
-  //   }
-  // }
 
 
   return (

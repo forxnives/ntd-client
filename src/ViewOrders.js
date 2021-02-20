@@ -239,43 +239,6 @@ const ViewOrders = ({history, ordersArray, update, updateValue}) => {
     })
 
 
-    // useEffect(()=>{
-        
-    //     const retrieveOrders = async (e) => {
-
-    //         try {
-    //             const response = await fetch('http://localhost:3000/ordersretrieve', {
-    //                 method: 'PUT',
-    //                 headers: {
-    //                   'Content-Type': 'application/json',
-    //                 },
-    //                 body: JSON.stringify({
-    //                     customerId: '6026ccf275a0066b1cf32b86'
-    //                 }),
-    //             })
-    //             if (response.status===500) {
-    //                 throw new Error('Failure to retrieve')
-    //             }
-
-    //             const data = await response.json()
-
-    //             console.log(data)
-    //             setOrdersArray(data.data)
-              
-    //         } catch(err) {
-    //             setError(err.message);
-    //             console.log(err.message)
-    //         }
-    //     }
-
-    //     retrieveOrders()
-
-    // },[])
-
-
-
-
-
     return (
 
         <TableContainer component={Paper}>

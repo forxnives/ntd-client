@@ -32,7 +32,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-import Chart from './Chart';
+import Chart from './DashCell';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import NewOrder from './NewOrder';
@@ -282,7 +282,31 @@ useEffect(() => {
 
 
   return (
+
+    <Router>
+
+    <Switch >
+
+    <Route
+            exact
+            path="/"
+            render={props => {
+              if (user) {
+                return <Redirect to="/app/dashboard" />;
+              }
+
+              return <Login getUser={getUser} {...props} />;
+              // return <Login setUser={setUser} {...props} />;
+            }}
+    />
+
+
+
+    <Route path="/app" >
+
+
     <div className={classes.root}>
+
       
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
@@ -308,10 +332,9 @@ useEffect(() => {
         </Toolbar>
       </AppBar>
 
-      <Router>
 
-        {
-          !user && (
+
+
             <Drawer
             variant="permanent"
             classes={{
@@ -328,7 +351,7 @@ useEffect(() => {
             <List>
     
             <div>
-              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/dashboard">
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/app/dashboard">
                 <ListItem button>
                   <ListItemIcon>
                   <Badge badgeContent={0} color="secondary">
@@ -339,7 +362,7 @@ useEffect(() => {
                 </ListItem>
               </LinkRoute>
               
-              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/neworder">
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/app/neworder">
                 <ListItem button>
                   <ListItemIcon>
     
@@ -350,7 +373,7 @@ useEffect(() => {
                 </ListItem>
               </LinkRoute>
               
-              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/vieworders">
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/app/vieworders">
                 <ListItem button>
                   <ListItemIcon>
                   <Badge badgeContent={orderNotification} color="secondary">
@@ -361,7 +384,7 @@ useEffect(() => {
                 </ListItem>
               </LinkRoute>
     
-              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/viewinvoices">
+              <LinkRoute onClick={() => forceUpdate(!update)} style={{ textDecoration: 'none', color: 'black' }} to="/app/viewinvoices">
                 <ListItem button>
                   <ListItemIcon>
                     <Badge badgeContent={invoiceNotification} color="secondary">
@@ -377,8 +400,7 @@ useEffect(() => {
             <Divider />
             
           </Drawer>
-          )
-        }
+
 
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -388,31 +410,20 @@ useEffect(() => {
         <Switch>
 
 
-        <Route
-            exact
-            path="/login"
-            render={props => {
-              // if (user) {
-              //   return <Redirect to="/dashboard" />;
-              // }
-
-              return <Login getUser={getUser} {...props} />;
-              // return <Login setUser={setUser} {...props} />;
-            }}
-          />
 
 
 
 
 
-          <Route path="/dashboard">
+
+          <Route path="/app/dashboard">
 
 
-            <Dashboard ordersArray={ordersArray} invoicesArray={invoicesArray}  />
+            <Dashboard ordersArray={ordersArray} invoicesArray={invoicesArray} userName={ user && (user.userName)}  />
 
 
           </Route>
-          <Route path="/neworder">
+          <Route path="/app/neworder">
             <h1>New Order</h1>
 
             {/* <button onClick={() => handleTest('PENDING')} >TEST BUTTON</button> */}
@@ -421,19 +432,19 @@ useEffect(() => {
 
 
           </Route>
-          <Route path="/vieworders">
+          <Route path="/app/vieworders">
             <h1>View Orders</h1>
 
 
 
             <ViewOrders updateValue={update} update={forceUpdate} ordersArray={ordersArray}  />
           </Route>
-          <Route path="/viewinvoices">
+          <Route path="/app/viewinvoices">
             <h1>View Invoices</h1>
 
             <ViewInvoices invoicesArray={invoicesArray} />
           </Route>
-          <Route path="/submitsuccess">
+          <Route path="/app/submitsuccess">
             <SubmitSuccess />
           </Route>
         </Switch>
@@ -445,8 +456,22 @@ useEffect(() => {
 
       </main>
 
-      </Router>
+
     </div>
+
+
+
+
+
+    </Route >
+
+
+
+
+
+
+    </Switch >
+    </Router>
   );
 }
 

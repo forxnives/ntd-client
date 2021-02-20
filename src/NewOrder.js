@@ -110,7 +110,7 @@ const NewOrder = ({history, update, updateValue, invoicesArray, userId}) => {
                 update(!updateValue)
                 history.push('/submitsuccess')
             }
-            // console.log(thing);
+
             
         
         } catch(err) {
@@ -133,9 +133,6 @@ const NewOrder = ({history, update, updateValue, invoicesArray, userId}) => {
         
 
         if (rowsArray.length > 1) {
-
-            // console.log(e.target)
-            // console.log(e.target.parentNode.parentNode.parentNode)
 
 
             if (e.target.nodeName === "svg") {
